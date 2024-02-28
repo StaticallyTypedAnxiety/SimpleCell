@@ -1,5 +1,6 @@
-use std::{cell::UnsafeCell, mem::MaybeUninit};
+use std::{cell::UnsafeCell, fmt::Display, mem::MaybeUninit};
 
+#[derive(Debug)]
 pub enum SimpleCellError {
     AlreadyInitialized,
     ValueUnitialized,
@@ -14,6 +15,17 @@ impl<T> Default for SimpleCell<T> {
         Self::new()
     }
 }
+
+impl Display for SimpleCellError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SimpleCellError::AlreadyInitialized => f.write_str("AlreadyInitialized"),
+            SimpleCellError::ValueUnitialized => f.write_str("ValueUnitialized"),
+        }
+    }
+}
+
+impl std::error::Error for SimpleCellError {}
 impl<T> SimpleCell<T> {
     pub fn new() -> Self {
         Self {
